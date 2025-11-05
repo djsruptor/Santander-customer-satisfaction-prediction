@@ -1,0 +1,6 @@
+.venv/
+.ipynb_checkpoints/
+data/raw/
+data/processed/*.csv
+data/processed/*.parquet
+models/

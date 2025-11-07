@@ -4,7 +4,9 @@ from xgboost import XGBClassifier
 import pickle
 import os
 
-model_path = 'models/best_model.pkl'
+os.makedirs("models", exist_ok=True)
+model_path = "models/best_model.pkl"
+
 
 def train_model():
     df = get_data()

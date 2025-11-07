@@ -2,6 +2,7 @@ import pandas as pd
 import openml
 from sklearn.model_selection import train_test_split
 import numpy as np
+import json
 
 openml.config.cache_directory = 'data/cache'
 
@@ -31,3 +32,12 @@ def remove_correlated_features(df, threshold=0.9, target='TARGET'):
 
     return df_reduced, to_drop
 
+def json_customer(df, index=666):
+    data = df.iloc[index].to_dict()
+
+    filename = f'examples/{index}.json'
+
+    with open(filename, 'w') as f_out:
+        json.dump(data, f_out, indent=2)
+
+    return filename

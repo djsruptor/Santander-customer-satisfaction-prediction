@@ -1,6 +1,22 @@
+# Virtual environments
 .venv/
+__pycache__/
+
+# Jupyter notebooks
 .ipynb_checkpoints/
-data/raw/
-data/processed/*.csv
-data/processed/*.parquet
-models/
+
+# Local environment
+.DS_Store
+*.log
+
+# Docker build cache
+*.egg-info/
+build/
+dist/
+
+# IDE
+.vscode/
+
+# keep trained model
+!models/
+!models/best_model.pkl

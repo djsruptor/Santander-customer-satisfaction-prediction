@@ -1,6 +1,7 @@
 from src.data import get_data, split_data, remove_correlated_features
 from sklearn.metrics import roc_auc_score, average_precision_score
 from xgboost import XGBClassifier
+import pandas as pd
 import pickle
 import os
 
@@ -29,7 +30,7 @@ def train_model():
         random_state=666
     )
 
-    model.fit(X_train, y_train)
+    model.fit(pd.concat([X_train, X_val]), pd.concat([y_train, y_val]))
 
     y_pred = model.predict_proba(X_val)[:,1]
     roc = roc_auc_score(y_val, y_pred)
@@ -48,5 +49,5 @@ def train_model():
 
     return model
 
-if __name__ == '__main':
+if __name__ == '__main__':
     train_model()

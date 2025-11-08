@@ -1,0 +1,26 @@
+# Version control
+.git
+.gitignore
+
+# Virtual environments
+.venv
+__pycache__
+
+# Jupyter notebooks and checkpoints
+*.ipynb
+.ipynb_checkpoints
+
+# System
+.DS_Store
+*.log
+.vscode
+.idea
+
+# Build and packaging artifacts
+*.egg-info
+build/
+dist/
+
+# README and documentation
+*.md
+train.py

@@ -54,8 +54,8 @@ When accessing http://localhost:8000/docs, there will be two modules:
 - Target: `TARGET` (1 = dissatisfied, 0 = satisfied)
 
 ## Results
-Final test ROC-AUC scores: 0.848
-Final test PR-AUC scores: 0.194
+- Final test ROC-AUC scores: 0.848
+- Final test PR-AUC scores: 0.194
 
 The ROC-AUC is comparable to results from the competition winner models.
 The PR-AUC is relatively low, but expected due to the high imbalance of the data (96%-0, 4%-1)

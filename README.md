@@ -1,5 +1,4 @@
 # Santander Customer Satisfaction Prediction
-[Link to competition in Kaggle](https://www.kaggle.com/competitions/santander-customer-satisfaction)
 
 ## Problem description
 
@@ -69,3 +68,6 @@ The PR-AUC is relatively low, but expected due to the high imbalance of the data
     howpublished = {\url{https://kaggle.com/competitions/santander-customer-satisfaction}},
     note = {Kaggle}
 }
+
+## License
+This project is licensed under the MIT License – see the [LICENSE](LICENSE) file for details.

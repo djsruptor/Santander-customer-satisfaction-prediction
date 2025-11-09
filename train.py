@@ -5,6 +5,7 @@ from xgboost import XGBClassifier
 import pandas as pd
 import joblib
 import os
+import time
 
 os.makedirs("models", exist_ok=True)
 
@@ -55,4 +56,7 @@ def train_model():
     return model
 
 if __name__ == '__main__':
+
+    start = time.time()
     train_model()
+    print(f"Training time: {time.time() - start:.2f}s")

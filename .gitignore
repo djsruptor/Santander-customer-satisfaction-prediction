@@ -1,23 +1,26 @@
-# Virtual environments
-.venv/
+# Python cache
 __pycache__/
 *.pyc
 
-# Jupyter notebooks
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Data and model outputs
+data/
+models/
+
+# Jupyter
 .ipynb_checkpoints/
 
-# Local environment
-.DS_Store
+# Logs and locks
 *.log
+*.lock
 
-# Docker build cache
-*.egg-info/
-build/
-dist/
-
-# IDE
+# IDE / OS files
 .vscode/
+.DS_Store
 
-# keep trained model
-!models/
-!models/best_model.pkl
+# Zoomcamp instructions
+instructions.md

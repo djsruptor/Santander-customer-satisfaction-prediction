@@ -3,18 +3,30 @@
 .gitignore
 
 # Virtual environments
-.venv
-__pycache__
-
-# Jupyter notebooks and checkpoints
-*.ipynb
-.ipynb_checkpoints
-
-# System
-.DS_Store
+__pycache__/
+*.pyc
+*.pyo
+*.pdb
 *.log
-.vscode
-.idea
+*.tmp
+*.swp
+*.swo
+*.lock
+.DS_Store
+
+.venv/
+venv/
+env/
+
+*.ipynb
+.ipynb_checkpoints/
+
+data/
+models/
+
+.vscode/
+.idea/
+*.bak
 
 # Build and packaging artifacts
 *.egg-info

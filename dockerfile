@@ -1,16 +1,16 @@
-FROM python:3.12-slim
+FROM python:3.12-slim-bookworm
 
-RUN pip install uv
+RUN pip install --no-cache-dir uv
 
 WORKDIR /app
 
 COPY pyproject.toml .python-version uv.lock ./
-RUN uv sync --locked
+RUN uv sync --locked --no-install-project
 ENV PATH="/app/.venv/bin:$PATH"
 
 COPY examples/ ./examples/
 COPY predict.py ./
-COPY models/best_model.pkl ./models/best_model.pkl
+COPY models/best_model.json ./models/best_model.json
 COPY src/ ./src/
 
 EXPOSE 9696

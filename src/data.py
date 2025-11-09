@@ -1,20 +1,22 @@
 import pandas as pd
-import openml
-from sklearn.model_selection import train_test_split
 import numpy as np
 import json
+import os
+from sklearn.model_selection import train_test_split
+from src.config import RAW_FILE, REDUCED_FILE
 
-openml.config.cache_directory = 'data/cache'
-
-def get_data(dataset_id=46859):
-    dataset = openml.datasets.get_dataset(dataset_id)
-    df, *_ = dataset.get_data()
+def get_data():
+    df = pd.read_parquet(RAW_FILE)  
     df['TARGET'] = df['TARGET'].astype(float).astype(int)
     return df
 
 def split_data(df, target='TARGET', test_size=0.2, val_size=0.25, random_state=666):
-    df_full_train, df_test = train_test_split(df, test_size=test_size, stratify=df[target], random_state=random_state)
-    df_train, df_val = train_test_split(df_full_train, test_size=val_size, stratify=df_full_train[target], random_state=random_state)
+    df_full_train, df_test = train_test_split(
+        df, test_size=test_size, stratify=df[target], random_state=random_state
+    )
+    df_train, df_val = train_test_split(
+        df_full_train, test_size=val_size, stratify=df_full_train[target], random_state=random_state
+    )
 
     X_train, y_train = df_train.drop(columns=[target]), df_train[target]
     X_val, y_val = df_val.drop(columns=[target]), df_val[target]
@@ -30,14 +32,19 @@ def remove_correlated_features(df, threshold=0.9, target='TARGET'):
     to_drop = [col for col in upper.columns if any(upper[col] > threshold)]
     df_reduced = df.drop(columns=to_drop)
 
+    if os.path.exists(RAW_FILE):
+        print(f'{RAW_FILE} already exists')
+    else:
+        df_reduced.to_parquet(REDUCED_FILE, index=False)
+        print(f'Saved {RAW_FILE}')
+
     return df_reduced, to_drop
 
 def json_customer(df, index=666):
+    os.makedirs("examples", exist_ok=True)
     data = df.iloc[index].to_dict()
-
     filename = f'examples/{index}.json'
 
     with open(filename, 'w') as f_out:
         json.dump(data, f_out, indent=2)
-
     return filename

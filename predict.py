@@ -1,31 +1,33 @@
-import pickle
+import joblib
 import os
 import uvicorn
 import pandas as pd
 import json
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from typing import Dict
 from pydantic import BaseModel
-from src.data import get_data, remove_correlated_features, json_customer
+import pyarrow.parquet as pq
+from src.config import MODEL_FILE, REDUCED_FILE
+from src.data import json_customer
 
-model_path = 'models/best_model.pkl'
-with open(model_path, 'rb') as f_in:
-    metadata = pickle.load(f_in)
+table = pq.read_table(REDUCED_FILE, use_threads=True)
+df = table.slice(0, 1000).to_pandas()
+
+with open(MODEL_FILE, 'rb') as f_in:
+    metadata = joblib.load(f_in)
 
 model = metadata['model']
 feature_names = metadata['feature_names']
 
-df = get_data()
-df_reduced, dropped = remove_correlated_features(df)
-if 'TARGET' in df_reduced.columns:
-    df_reduced = df_reduced.drop(columns='TARGET')
+if 'TARGET' in df.columns:
+    df = df.drop(columns='TARGET')
 
 app = FastAPI(title='Customer dissatisfaction classification 2')
 
 def predict_single(customer: Dict[str, float]) -> float:
     df = pd.DataFrame([customer], columns=feature_names)
-    result = model.predict_proba(df)[0, 1]
-    return float(result)
+    prob = model.predict_proba(df)[0, 1]
+    return float(prob)
 
 class PredictResponse(BaseModel):
     dissatisfaction_probability: float
@@ -34,11 +36,13 @@ class PredictResponse(BaseModel):
 @app.get(
     '/files',
     summary='Generate JSON for indexed customer',
-    description='Creates a customer JSON file you can later use for prediction.'
+    description='Creates a customer JSON file you can later use for prediction. Top 1000 customers are available for testing.'
 )
 def generate_sample(index: int = 0):
-    data = json_customer(df_reduced, index)
-    return {'message': f'sample {index} generated', 'sample': data}
+    if index < 0 or index >= len(df):
+        raise HTTPException(404, "Index out of range")
+    data = json_customer(df, index)
+    return {'message': f'sample {index} generated', 'file': data}
 
 @app.post(
         '/predict',
@@ -47,8 +51,9 @@ def generate_sample(index: int = 0):
         )
 def predict_from_file(number: int) -> PredictResponse:
     file_path = f'examples/{number}.json'
+
     if not os.path.exists(file_path):
-        return {'error': f'File {file_path} not found'}
+        raise HTTPException(404, f"File {file_path} not found. Use GET /files first.")
 
     with open(file_path, 'r') as f:
         data = json.load(f)
@@ -59,7 +64,6 @@ def predict_from_file(number: int) -> PredictResponse:
         dissatisfied=bool(prob > 0.136)
     )
 
-port = int(os.getenv("PORT", 9696))
-
 if __name__ == '__main__':
+    port = int(os.getenv("PORT", 8000))
     uvicorn.run('predict:app', host='0.0.0.0', port=port, reload=True)

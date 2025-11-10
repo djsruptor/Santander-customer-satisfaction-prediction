@@ -9,7 +9,7 @@ Each record represents a single customer and 369 numeric features. The target va
 `0` = Satisfied
 `1` = Dissatisfied
 
-The goal is to build a model that identifies which customers are dissatisfied, so the bank's marketing team can take proactive actions before it is too late.
+The goal is to build a model that identifies which customers are dissatisfied, enabling Santander to reduce churn, improve customer experience, and optimize retention campaigns. Even small improvements in recall for the minority (dissatisfied) class can translate into significant cost savings and higher lifetime value.
 
 This repository implements the full **CRISP-DM** workflow:
 
@@ -29,8 +29,7 @@ EDA and pre-processing steps (see `notebook.ipynb`):
 - All columns are numerical -> no categorical encoding required
 - Identified highly correlated pairs and reduced features (369 -> 203) to improve efficiency
 - Target imbalanced (`0`: 96%, `1`: 4%) visualized with bar chart
-
-The data was split into train/val/test (60/20/20) using `sklearn.model_selection.train_test_split`.
+- Data was split into train/val/test (60/20/20) using `sklearn.model_selection.train_test_split`
 
 ## Model Selection, Training, and Tuning
 
@@ -45,7 +44,7 @@ Models evaluated:
 5-fold cross-validation was implemented using `GridSearchCV` and `RandomizedSearchCV` for parameter optimization.
 Results were stored and compared using a consolidated performance table.
 
-> The competition evaluated model performance using ROC-AUC score, but it has demonstrated to be misleading with highly imbalanced target variables, so PR-AUC was also computed to provide a more informative view of discrimination for the minority class.
+> While ROC-AUC provides a global ranking metric, PR-AUC better reflects the model's ability to identify dissatisfied customers — a priority for marketing and customer success teams who act on these predictions. For this reason, both metrics were taken into account when evaluating models performance.
 
 **Best performing model was XGBoost:**
 - ROC-AUC: 0.848
@@ -60,6 +59,8 @@ Additional validation confirmed model stability and fairness:
 - Plotted ROC, PR, Precision, Recall and F1 curves
 - Verified no single feature contributed over 40% of total importance
 
+> In this context, optimizing the F1-based threshold and prioritizing a higher TPR is essential. Retaining dissatisfied customers has a disproportionately positive business impact, so accepting a moderate increase in false positives (retaining already-satisfied customers) is a reasonable trade-off for capturing more truly dissatisfied ones.
+
 ## Model Deployment
 
 A trained model is served through FastAPI via (`predict.py`).
@@ -71,8 +72,8 @@ There are two endpoints:
 
 ## Reproducibility
 
-Dataset source: [OpenML 46859](https://www.openml.org/d/46859)
-Size: ~76k rows x 369 features
+- Dataset source: [OpenML 46859](https://www.openml.org/d/46859)
+- Size: ~76k rows x 369 features
 
 To reproduce:
 

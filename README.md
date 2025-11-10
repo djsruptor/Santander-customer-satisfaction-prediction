@@ -67,8 +67,8 @@ A trained model is served through FastAPI via (`predict.py`).
 
 There are two endpoints:
 
-`GET/` - Returns a JSON sample of feature values for a given index
-`POST/predict` - Returns satisfaction prediction based on customer number (user input) and threshold
+- `GET/` - Returns a JSON sample of feature values for a given index
+- `POST/predict` - Returns satisfaction prediction based on customer number (user input) and threshold
 
 ## Reproducibility
 

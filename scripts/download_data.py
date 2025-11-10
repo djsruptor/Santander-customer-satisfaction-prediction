@@ -9,7 +9,6 @@ import pandas as pd
 from src.config import DATASET_ID, RAW_FILE
 
 os.makedirs("data", exist_ok=True)
-os.makedirs("models", exist_ok=True)
 
 openml.config.cache_directory = 'data/cache'
 

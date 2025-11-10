@@ -8,10 +8,13 @@ COPY pyproject.toml .python-version uv.lock ./
 RUN uv sync --locked --no-install-project
 ENV PATH="/app/.venv/bin:$PATH"
 
-COPY examples/ ./examples/
-COPY predict.py ./
-COPY models/best_model.json ./models/best_model.json
 COPY src/ ./src/
+COPY scripts/ ./scripts/
+COPY train.py ./
+RUN uv run python scripts/download_data.py 
+RUN uv run python train.py
+
+COPY predict.py ./
 
 EXPOSE 9696
 

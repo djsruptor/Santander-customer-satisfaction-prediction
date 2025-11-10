@@ -10,6 +10,8 @@ import pyarrow.parquet as pq
 from src.config import MODEL_FILE, REDUCED_FILE
 from src.data import json_customer
 
+os.makedirs("examples", exist_ok=True)
+
 table = pq.read_table(REDUCED_FILE, use_threads=True)
 df = table.slice(0, 1000).to_pandas()
 

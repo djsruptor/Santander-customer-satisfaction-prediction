@@ -11,7 +11,6 @@ __pycache__/
 *.tmp
 *.swp
 *.swo
-*.lock
 .DS_Store
 
 .venv/
@@ -20,9 +19,6 @@ env/
 
 *.ipynb
 .ipynb_checkpoints/
-
-data/
-models/
 
 .vscode/
 .idea/
@@ -35,4 +31,3 @@ dist/
 
 # README and documentation
 *.md
-train.py
